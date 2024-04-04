@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+</head>
+<body>
+    <h2>Quiz</h2>
+    
+    
+    <form id="quizForm">
+        {% for question in questions %}
+            <div class="question">
+                <p>{{ question.question_text }}</p>
+                {% for option in question.options %}
+                    <input type="radio" id="{{ option.id }}" name="question{{ question.id }}" value="{{ option.id }}">
+                    <label for="{{ option.id }}">{{ option.option_text }}</label><br>
+                {% endfor %}
+                <br>
+                <label for="correct-answer{{ question.id }}">Correct Answer:</label>
+                <input type="number" id="correct-answer{{ question.id }}" name="correct-answer{{ question.id }}" min="1" max="{{ question.options|length }}" required>
+            </div>
+        {% endfor %}
+
+        <input type="submit" value="Submit">
+    </form>
+
+    
+    <div id="results" style="display: none;">
+        <h3>Quiz Results</h3>
+        <div id="answers"></div>
+    </div>
+
+    <script>
+        document.getElementById('quizForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const selectedAnswers = {};
+            const questions = {{ questions | tojson }};
+            questions.forEach(function(question) {
+                const selectedAnswer = document.querySelector('input[name="question' + question.id + '"]:checked');
+                if (selectedAnswer) {
+                    selectedAnswers[question.id] = selectedAnswer.value;
+                } else {
+                    selectedAnswers[question.id] = null; // If no option is selected
+                }
+            });
+
+            const resultsDiv = document.getElementById('results');
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = '';
+            let correctCount = 0;
+            questions.forEach(function(question) {
+                const correctAnswerId = document.getElementById('correct-answer' + question.id).value;
+                const correctAnswerText = getOptionText(question, correctAnswerId);
+                const selectedAnswerId = selectedAnswers[question.id];
+                const selectedAnswerText = getOptionText(question, selectedAnswerId);
+                const p = document.createElement('p');
+                if (selectedAnswerId === correctAnswerId) {
+                    p.textContent = `${question.question_text}: Your answer - ${selectedAnswerText}.`;
+                    p.style.color = 'green';
+                    correctCount++;
+                } else {
+                    p.textContent = `${question.question_text}: Incorrect. Correct answer - ${correctAnswerText}.`;
+                    p.style.color = 'red';
+                }
+                answersDiv.appendChild(p);
+            });
+            resultsDiv.style.display = 'block';
+
+            const scoreP = document.createElement('p');
+            scoreP.textContent = `Score: ${correctCount}/${questions.length}`;
+            answersDiv.appendChild(scoreP);
+        });
+
+        function getOptionText(question, optionId) {
+            for (let i = 0; i < question.options.length; i++) {
+                if (question.options[i].id === optionId) {
+                    return question.options[i].option_text;
+                }
+            }
+            return null;
+        }
+    </script>
+</body>
+</html>
