@@ -1,0 +1,9 @@
+Muhammad Afzal,mafzaldev@gmail.com,123456,1,4,4
+parames sivanantham,s.parameshwari2807@gmail.com,1234,3,5,5
+parames sivanantham,s.parameshwari2807@gmail.com,1234,3,5,5
+manikkam dhanapal,manikkam@gmail.com,987,0,0,0
+manikkam dhanapal,manikkam@gmail.com,987,0,0,0
+sakthi sri,sakthi@gmail.com,54321,2,4,4
+raj,raj@gmail,123,0,0,0
+parames sivanantham,s.parameshwari2807@gmail.com,123,3,5,5
+mani kumar,manikumar@gmail.com,765,0,0,0
